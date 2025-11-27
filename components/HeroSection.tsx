@@ -7,7 +7,7 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ 
-  totalCameras = 84, 
+  totalCameras = 92, 
   totalYears = "5 años", 
   totalAccidents = "15963" 
 }: HeroSectionProps) {
