@@ -77,7 +77,7 @@ export default function Dashboard() {
       <HeroSection />
 
       {/* Main Content */}
-      <div className="px-4 lg:px-8 pb-12 max-w-[1800px] mx-auto">
+      <div className="container pb-5">
         {/* Instructions */}
         <Instructions />
 
@@ -91,9 +91,9 @@ export default function Dashboard() {
         />
 
         {/* Map and Sidebar Row */}
-        <div className="flex gap-6 mb-6">
+        <div className="row g-3 mb-4">
           {/* Left: Sidebar (40%) */}
-          <div className="w-[40%]">
+          <div className="col-lg-5">
             <Sidebar
               selectedCamera={selectedCamera}
               cameraInfo={cameraInfo}
@@ -106,9 +106,9 @@ export default function Dashboard() {
           </div>
 
           {/* Right: Map (60%) */}
-          <div className="w-[60%]">
-            <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 overflow-hidden h-full">
-              <div className="h-[500px]">
+          <div className="col-lg-7">
+            <div className="card shadow-sm h-100" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: '1px solid rgba(0,0,0,0.1)' }}>
+              <div style={{ height: '500px' }}>
                 <Map
                   segmentos={segmentos}
                   accidentesProcessed={accidentesProcessed}
@@ -126,10 +126,10 @@ export default function Dashboard() {
         </div>
 
         {/* Line Chart */}
-        <div>
-          <h3 className="text-lg font-semibold text-white mb-3">
+        <div className="mb-4">
+          <h3 className="h5 fw-semibold mb-3" style={{ color: '#1a1a1a' }}>
             Accidentes por Mes
-            <span className="text-sm font-normal text-gray-400 ml-3">
+            <span className="small fw-normal text-muted ms-3">
               Haga clic en una línea para ver la fecha de instalación de la cámara
             </span>
           </h3>
@@ -145,8 +145,8 @@ export default function Dashboard() {
         </div>
 
         {/* Footer */}
-        <div className="mt-12 pt-6 border-t border-white/10">
-          <p className="text-center text-sm text-gray-500">
+        <div className="mt-5 pt-4 border-top">
+          <p className="text-center small text-muted">
             Datos de accidentes de tránsito en Bogotá (2018-2022) • 
             Análisis de efectividad de cámaras salvavidas
           </p>

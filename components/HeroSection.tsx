@@ -12,75 +12,69 @@ export default function HeroSection({
   totalAccidents = "Miles" 
 }: HeroSectionProps) {
   return (
-    <section className="px-6 py-12 max-w-6xl mx-auto">
+    <section className="container py-5">
       {/* Title */}
-      <h1 className="text-5xl md:text-7xl font-bold text-white text-center mb-8 leading-tight">
-        ¿Las cámaras salvavidas
-        <br />
-        salvan vidas? 
+      <h1 className="display-1 fw-bold text-white text-center mb-4">
+        ¿Las cámaras salvavidas salvan vidas? 
       </h1>
 
       {/* Introduction paragraph */}
-      <div className="text-lg md:text-xl text-gray-300 leading-relaxed max-w-4xl mx-auto space-y-6 text-center mb-12">
-        <p>
-          Hace varios años, el gobierno de Bogotá instaló{" "}
-          <span className="text-[#e94560] font-semibold">cámaras salvavidas</span>{" "}
-          en las principales vías de la ciudad. Estas cámaras tienen como función principal 
-          identificar vehículos infractores cuya velocidad supera la máxima permitida.
-        </p>
-        
-        <p>
-          La idea detrás de estas cámaras es{" "}
-          <span className="text-[#e94560] font-semibold">salvar vidas</span>, 
-          reduciendo los accidentes de tránsito causados por el exceso de velocidad.
-          En ese orden de ideas...  ¿Estas cámaras salvavidas{" "}
-          <span className="underline decoration-[#e94560] decoration-2 underline-offset-4">
-            sí salvan vidas
-          </span>?
-        </p>
-        
-        <p className="text-gray-400">
-          Para responder a esta pregunta, hemos creado las siguientes herramientas 
-          visuales interactivas para que{" "}
-          <span className="text-white">usted mismo encuentre la respuesta</span>. 
-        </p>
+      <div className="row justify-content-center mb-5">
+        <div className="col-lg-10 col-xl-8">
+          <div className="fs-5 text-center" style={{ color: '#404040', lineHeight: '1.8' }}>
+            <p className="mb-4">
+              Hace varios años, el gobierno de Bogotá instaló{" "}
+              <span className="text-danger fw-semibold">cámaras salvavidas</span>{" "}
+              en las principales vías de la ciudad. Estas cámaras tienen como función principal 
+              identificar vehículos infractores cuya velocidad supera la máxima permitida.
+            </p>
+            
+            <p className="mb-4">
+              La idea detrás de estas cámaras es{" "}
+              <span className="text-danger fw-semibold">salvar vidas</span>, 
+              reduciendo los accidentes de tránsito causados por el exceso de velocidad.
+              En ese orden de ideas... ¿Estas cámaras salvavidas{" "}
+              <span className="text-decoration-underline" style={{ textDecorationColor: '#e94560', textDecorationThickness: '2px' }}>
+                sí salvan vidas
+              </span>?
+            </p>
+            
+            <p style={{ color: '#737373' }}>
+              Para responder a esta pregunta, hemos creado las siguientes herramientas 
+              visuales interactivas para que{" "}
+              <span className="text-dark fw-semibold">usted mismo encuentre la respuesta</span>. 
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Stats Table */}
-      <div className="max-w-2xl mx-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="border-b border-white/20">
-              <th className="py-3 px-4 text-left text-sm font-medium text-gray-400 uppercase tracking-wider">
-                Métrica
-              </th>
-              <th className="py-3 px-4 text-right text-sm font-medium text-gray-400 uppercase tracking-wider">
-                Valor
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-white/10 hover:bg-white/5 transition-colors">
-              <td className="py-4 px-4 text-gray-300">Cámaras analizadas</td>
-              <td className="py-4 px-4 text-right">
-                <span className="text-2xl font-bold text-[#e94560]">{totalCameras}</span>
-              </td>
-            </tr>
-            <tr className="border-b border-white/10 hover:bg-white/5 transition-colors">
-              <td className="py-4 px-4 text-gray-300">Período de datos</td>
-              <td className="py-4 px-4 text-right">
-                <span className="text-2xl font-bold text-[#533483]">{totalYears}</span>
-                <span className="text-sm text-gray-400 ml-2">(2018-2022)</span>
-              </td>
-            </tr>
-            <tr className="hover:bg-white/5 transition-colors">
-              <td className="py-4 px-4 text-gray-300">Accidentes registrados</td>
-              <td className="py-4 px-4 text-right">
-                <span className="text-2xl font-bold text-white">{totalAccidents}</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="row justify-content-center">
+        <div className="col-lg-8">
+          <table className="table table-hover">
+            <tbody>
+              <tr>
+                <td className="fs-5 py-3" style={{ color: '#404040' }}>Cámaras analizadas</td>
+                <td className="text-end py-3">
+                  <span className="display-6 fw-bold" style={{ color: '#e94560' }}>{totalCameras}</span>
+                </td>
+              </tr>
+              <tr>
+                <td className="fs-5 py-3" style={{ color: '#404040' }}>De datos</td>
+                <td className="text-end py-3">
+                  <span className="display-6 fw-bold" style={{ color: '#533483' }}>{totalYears}</span>
+                  <span className="ms-2 text-muted">(2018-2022)</span>
+                </td>
+              </tr>
+              <tr>
+                <td className="fs-5 py-3" style={{ color: '#404040' }}>De accidentes registrados</td>
+                <td className="text-end py-3">
+                  <span className="display-6 fw-bold text-dark">{totalAccidents}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   );
