@@ -90,10 +90,10 @@ export default function Dashboard() {
           onPrincipalChange={setPrincipalFilter}
         />
 
-        {/* Map and Sidebar Row */}
+        {/* Map, Sidebar and Line Chart Row */}
         <div className="row g-3 mb-4">
-          {/* Left: Sidebar (40%) */}
-          <div className="col-lg-5">
+          {/* Left Column: Sidebar and Line Chart */}
+          <div className="col-lg-4">
             <Sidebar
               selectedCamera={selectedCamera}
               cameraInfo={cameraInfo}
@@ -105,10 +105,11 @@ export default function Dashboard() {
             />
           </div>
 
-          {/* Right: Map (60%) */}
-          <div className="col-lg-7">
-            <div className="card shadow-sm h-100" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: '1px solid rgba(0,0,0,0.1)' }}>
-              <div style={{ height: '500px' }}>
+          {/* Right Column: Map and Line Chart */}
+          <div className="col-lg-8">
+            {/* Map */}
+            <div className="card shadow-sm mb-3" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)', border: '1px solid rgba(0,0,0,0.1)' }}>
+              <div style={{ height: '400px' }}>
                 <Map
                   segmentos={segmentos}
                   accidentesProcessed={accidentesProcessed}
@@ -122,26 +123,26 @@ export default function Dashboard() {
                 />
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Line Chart */}
-        <div className="mb-4">
-          <h3 className="h5 fw-semibold mb-3" style={{ color: '#1a1a1a' }}>
-            Accidentes por Mes
-            <span className="small fw-normal text-muted ms-3">
-              Haga clic en una línea para ver la fecha de instalación de la cámara
-            </span>
-          </h3>
-          <LineChart
-            accidentesProcessed={accidentesProcessed}
-            cameraInfo={cameraInfo}
-            allMonths={allMonths}
-            severityFilter={severityFilter}
-            principalFilter={principalFilter}
-            selectedCamera={selectedCamera}
-            onCameraSelect={handleCameraSelect}
-          />
+            {/* Line Chart */}
+            <div>
+              <h3 className="h6 fw-semibold mb-2" style={{ color: '#1a1a1a' }}>
+                Accidentes por Mes
+                <span className="small fw-normal text-muted ms-2">
+                  Haga clic en una línea para ver la fecha de instalación
+                </span>
+              </h3>
+              <LineChart
+                accidentesProcessed={accidentesProcessed}
+                cameraInfo={cameraInfo}
+                allMonths={allMonths}
+                severityFilter={severityFilter}
+                principalFilter={principalFilter}
+                selectedCamera={selectedCamera}
+                onCameraSelect={handleCameraSelect}
+              />
+            </div>
+          </div>
         </div>
 
         {/* Footer */}

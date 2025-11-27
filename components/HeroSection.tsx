@@ -9,12 +9,12 @@ interface HeroSectionProps {
 export default function HeroSection({ 
   totalCameras = 84, 
   totalYears = "5 años", 
-  totalAccidents = "Miles" 
+  totalAccidents = "15963" 
 }: HeroSectionProps) {
   return (
     <section className="container py-5">
       {/* Title */}
-      <h1 className="display-1 fw-bold text-white text-center mb-4">
+      <h1 className="display-1 fw-bold text-blue text-center mb-4">
         ¿Las cámaras salvavidas salvan vidas? 
       </h1>
 

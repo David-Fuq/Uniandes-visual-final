@@ -46,11 +46,11 @@ export default function LineChart({
   useEffect(() => {
     if (! svgRef.current) return;
 
-    const svg = d3. select(svgRef.current);
+    const svg = d3.select(svgRef.current);
     const tooltip = d3.select(tooltipRef.current);
 
     const width = 1000;
-    const height = 400;
+    const height = 450;
     const margin = { top: 40, right: 30, bottom: 50, left: 60 };
 
     svg.selectAll("*").remove();
@@ -205,10 +205,10 @@ export default function LineChart({
       .attr("x", width / 2)
       .attr("y", 20)
       .attr("text-anchor", "middle")
-      . attr("font-size", "16px")
+      .attr("font-size", "16px")
       .attr("font-weight", "bold")
       .attr("fill", "#333")
-      .text(`Accidentes Mensuales por Cámara (${severityFilter})`);
+      .text(`Accidentes Mensuales (${severityFilter})`);
 
     // Axis labels
     svg
@@ -235,7 +235,7 @@ export default function LineChart({
     <div className="relative bg-white rounded-xl shadow-lg overflow-hidden">
       <svg
         ref={svgRef}
-        viewBox="0 0 1000 400"
+        viewBox="0 0 1000 450"
         className="w-full"
         style={{ backgroundColor: "white" }}
       />

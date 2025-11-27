@@ -57,23 +57,18 @@ export default function Filters({
             <label className="form-label fw-semibold" style={{ color: '#404040' }}>
               Filtrar por vía principal
             </label>
-            <div className="btn-group d-flex flex-wrap gap-2" role="group">
+            <select 
+              className="form-select"
+              value={principalFilter}
+              onChange={(e) => onPrincipalChange(e.target.value)}
+              style={{ fontSize: '0.875rem' }}
+            >
               {principalOptions.map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => onPrincipalChange(option)}
-                  className={`btn ${principalFilter === option ? 'btn-danger' : 'btn-outline-secondary'}`}
-                  style={{
-                    flex: '1 1 auto',
-                    minWidth: '100px',
-                    fontSize: '0.875rem'
-                  }}
-                >
+                <option key={option} value={option}>
                   {option}
-                </button>
+                </option>
               ))}
-            </div>
+            </select>
           </div>
         </div>
       </div>
