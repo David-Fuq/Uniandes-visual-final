@@ -46,14 +46,21 @@ export default function LineChart({
   useEffect(() => {
     if (!svgRef.current) return;
 
-    const svg = d3.select(svgRef.current);
+    const svg = d3.select(svgRef. current);
     const tooltip = d3.select(tooltipRef.current);
 
     const width = 800;
-    const height = 400;
-    const margin = { top: 40, right: 30, bottom: 50, left: 60 };
+    const height = 350;
+    const margin = { top: 30, right: 30, bottom: 40, left: 50 };
 
     svg.selectAll("*").remove();
+
+    // Dark background
+    svg
+      .append("rect")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("fill", "#0a1628");
 
     if (lineData.length === 0) {
       svg
@@ -61,7 +68,7 @@ export default function LineChart({
         .attr("x", width / 2)
         .attr("y", height / 2)
         .attr("text-anchor", "middle")
-        .attr("fill", "#666")
+        .attr("fill", "#64748b")
         .text("No hay datos para los filtros seleccionados");
       return;
     }
@@ -83,6 +90,19 @@ export default function LineChart({
       .scaleOrdinal(d3.schemeTableau10)
       .domain(lineData.map((d) => d.cameraId));
 
+    // Grid lines
+    svg
+      .append("g")
+      .selectAll("line")
+      .data(yScale.ticks(8))
+      .join("line")
+      .attr("x1", margin.left)
+      .attr("x2", width - margin.right)
+      .attr("y1", (d) => yScale(d))
+      .attr("y2", (d) => yScale(d))
+      .attr("stroke", "#1e3a5f")
+      .attr("stroke-width", 1);
+
     // Axes
     svg
       .append("g")
@@ -90,45 +110,34 @@ export default function LineChart({
       .call(
         d3
           .axisBottom(xScale)
-          .ticks(d3.timeYear. every(1))
+          . ticks(d3.timeYear.every(1))
           .tickFormat((d) => d3.timeFormat("%Y")(d as Date))
       )
-      . selectAll("text")
-      .attr("font-size", "11px");
+      . call((g) => g.select(".domain").attr("stroke", "#334155"))
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#334155"))
+      .call((g) => g.selectAll(".tick text"). attr("fill", "#94a3b8"). attr("font-size", "11px"));
 
     svg
       .append("g")
       .attr("transform", `translate(${margin.left},0)`)
-      .call(d3.axisLeft(yScale). ticks(10))
-      .selectAll("text")
-      .attr("font-size", "11px");
-
-    // Grid lines
-    svg
-      .append("g")
-      .selectAll("line")
-      .data(yScale.ticks(10))
-      .join("line")
-      .attr("x1", margin.left)
-      .attr("x2", width - margin.right)
-      .attr("y1", (d) => yScale(d))
-      .attr("y2", (d) => yScale(d))
-      .attr("stroke", "#eee")
-      .attr("stroke-width", 1);
+      .call(d3.axisLeft(yScale). ticks(8))
+      .call((g) => g.select(".domain").attr("stroke", "#334155"))
+      .call((g) => g.selectAll(".tick line").attr("stroke", "#334155"))
+      .call((g) => g.selectAll(".tick text").attr("fill", "#94a3b8").attr("font-size", "11px"));
 
     // Line generator
     const line = d3
       .line<LineDataPoint>()
-      . x((d) => xScale(d. date))
+      .x((d) => xScale(d.date))
       .y((d) => yScale(d.count))
       .curve(d3.curveMonotoneX);
 
     // Installation line (hidden initially)
     const installLine = svg
       .append("line")
-      .attr("stroke", "#333")
+      .attr("stroke", "#f0c14b")
       .attr("stroke-width", 2)
-      .attr("stroke-dasharray", "5,5")
+      .attr("stroke-dasharray", "6,4")
       .attr("y1", margin.top)
       .attr("y2", height - margin.bottom)
       .style("display", "none");
@@ -136,7 +145,7 @@ export default function LineChart({
     const installLabel = svg
       .append("text")
       .attr("font-size", "11px")
-      .attr("fill", "#333")
+      .attr("fill", "#f0c14b")
       .attr("text-anchor", "middle")
       .style("display", "none");
 
@@ -149,33 +158,31 @@ export default function LineChart({
       .attr("d", (d) => line(d.points))
       .attr("fill", "none")
       .attr("stroke", (d) => colorScale(d. cameraId))
-      .attr("stroke-width", (d) => (selectedCamera === d.cameraId ?  4 : 1.5))
-      .attr("opacity", (d) => (selectedCamera === d.cameraId ? 1 : 0.6))
+      .attr("stroke-width", (d) => (selectedCamera === d.cameraId ?  3 : 1.5))
+      .attr("opacity", (d) => (selectedCamera === d.cameraId ? 1 : 0.5))
       .style("cursor", "pointer")
       .on("mouseover", function (event, d) {
         if (selectedCamera !== d.cameraId) {
-          d3.select(this).attr("stroke-width", 4). attr("opacity", 1);
+          d3.select(this).attr("stroke-width", 3). attr("opacity", 1);
         }
 
         tooltip
           .style("display", "block")
           .html(
             `
-            <b>Cámara:</b> ${d. cameraId}<br>
-            <b>Vía:</b> ${d.principal || "Otros"}<br>
-            <b>Total:</b> ${d.totalAccidents} accidentes
+            <div class="font-semibold text-white">${d.cameraId}</div>
+            <div class="text-gray-400">Vía: ${d.principal || "Otros"}</div>
+            <div class="text-cyan-400">Total: ${d.totalAccidents} accidentes</div>
           `
           );
       })
       .on("mousemove", function (event) {
         const [x, y] = d3.pointer(event, svgRef.current);
-        tooltip
-          .style("left", x + 15 + "px")
-          . style("top", y + 15 + "px");
+        tooltip.style("left", x + 15 + "px").style("top", y + 15 + "px");
       })
-      .on("mouseout", function (event, d) {
+      . on("mouseout", function (event, d) {
         if (selectedCamera !== d.cameraId) {
-          d3. select(this).attr("stroke-width", 1.5).attr("opacity", 0.6);
+          d3.select(this).attr("stroke-width", 1.5).attr("opacity", 0.5);
         }
         tooltip.style("display", "none");
       })
@@ -188,59 +195,47 @@ export default function LineChart({
       const selectedData = lineData.find((d) => d.cameraId === selectedCamera);
       if (selectedData?. installDate) {
         const xPos = xScale(selectedData.installDate);
-        installLine.attr("x1", xPos).attr("x2", xPos). style("display", "block");
+        installLine. attr("x1", xPos). attr("x2", xPos). style("display", "block");
         installLabel
           .attr("x", xPos)
-          .attr("y", margin.top - 10)
-          .text(
-            `Instalación: ${selectedData.installDate.toLocaleDateString("es-CO")}`
-          )
+          .attr("y", margin.top - 8)
+          .text(`Instalación: ${selectedData.installDate. toLocaleDateString("es-CO")}`)
           .style("display", "block");
       }
     }
-
-    // Title
-    svg
-      .append("text")
-      .attr("x", width / 2)
-      .attr("y", 20)
-      .attr("text-anchor", "middle")
-      . attr("font-size", "14px")
-      .attr("font-weight", "bold")
-      .attr("fill", "#333")
-      .text(`Accidentes Mensuales por Cámara (${severityFilter})`);
 
     // Axis labels
     svg
       .append("text")
       .attr("x", width / 2)
-      .attr("y", height - 10)
+      .attr("y", height - 5)
       .attr("text-anchor", "middle")
-      . attr("font-size", "12px")
-      .attr("fill", "#666")
-      .text("Fecha");
+      . attr("font-size", "11px")
+      .attr("fill", "#64748b")
+      .text("Año");
 
     svg
       .append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", 20)
+      .attr("y", 15)
       .attr("text-anchor", "middle")
-      . attr("font-size", "12px")
-      .attr("fill", "#666")
-      .text("Número de Accidentes");
+      . attr("font-size", "11px")
+      .attr("fill", "#64748b")
+      .text("Accidentes");
   }, [lineData, allMonths, severityFilter, selectedCamera, onCameraSelect]);
 
   return (
     <div className="relative">
       <svg
         ref={svgRef}
-        viewBox="0 0 800 400"
-        className="w-full bg-white rounded-lg border border-gray-200"
+        viewBox="0 0 800 350"
+        className="w-full rounded-lg"
+        style={{ backgroundColor: "#0a1628" }}
       />
       <div
         ref={tooltipRef}
-        className="absolute hidden bg-white/95 text-gray-800 p-2 rounded-md shadow-lg border border-gray-200 text-xs pointer-events-none z-50"
+        className="absolute hidden bg-[#132238]/95 backdrop-blur-sm text-sm p-3 rounded-lg shadow-xl border border-cyan-500/30 pointer-events-none z-50"
         style={{ display: "none" }}
       />
     </div>
