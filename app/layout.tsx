@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Cámaras de Velocidad Bogotá",
-  description: "Análisis de efectividad de cámaras de velocidad en Bogotá",
+  title: "¿Las cámaras salvavidas salvan vidas? | Bogotá",
+  description: "Análisis de efectividad de cámaras de velocidad en Bogotá - Datos de accidentes 2018-2022",
 };
 
 export default function RootLayout({
@@ -15,8 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
-      <body className={inter. className}>{children}</body>
+    <html lang="es" className="scroll-smooth">
+      <body className={`${inter.className} antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

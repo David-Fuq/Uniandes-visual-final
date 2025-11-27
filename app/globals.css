@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Ink Wash color scheme */
+:root {
+  --ink-darkest: #1a1a1a;
+  --ink-dark: #2d2d2d;
+  --ink-medium: #404040;
+  --ink-light: #737373;
+  --ink-lightest: #f5f5f5;
+  --accent-primary: #e94560;
+  --accent-secondary: #533483;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(135deg, var(--ink-lightest) 0%, #e8e8e8 50%, #d0d0d0 100%);
+  min-height: 100vh;
+  color: var(--ink-darkest);
+}
+
 /* Leaflet fixes */
 .leaflet-container {
   width: 100%;
@@ -11,4 +32,22 @@
 
 .leaflet-tooltip {
   font-size: 12px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #737373;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #404040;
 }

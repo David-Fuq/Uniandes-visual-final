@@ -44,13 +44,13 @@ export default function LineChart({
   }, [accidentesProcessed, cameraInfo, severityFilter, principalFilter, allMonths]);
 
   useEffect(() => {
-    if (!svgRef.current) return;
+    if (! svgRef.current) return;
 
     const svg = d3.select(svgRef.current);
     const tooltip = d3.select(tooltipRef.current);
 
-    const width = 800;
-    const height = 400;
+    const width = 1000;
+    const height = 450;
     const margin = { top: 40, right: 30, bottom: 50, left: 60 };
 
     svg.selectAll("*").remove();
@@ -83,26 +83,6 @@ export default function LineChart({
       .scaleOrdinal(d3.schemeTableau10)
       .domain(lineData.map((d) => d.cameraId));
 
-    // Axes
-    svg
-      .append("g")
-      .attr("transform", `translate(0,${height - margin.bottom})`)
-      .call(
-        d3
-          .axisBottom(xScale)
-          .ticks(d3.timeYear. every(1))
-          .tickFormat((d) => d3.timeFormat("%Y")(d as Date))
-      )
-      . selectAll("text")
-      .attr("font-size", "11px");
-
-    svg
-      .append("g")
-      .attr("transform", `translate(${margin.left},0)`)
-      .call(d3.axisLeft(yScale). ticks(10))
-      .selectAll("text")
-      .attr("font-size", "11px");
-
     // Grid lines
     svg
       .append("g")
@@ -116,29 +96,52 @@ export default function LineChart({
       .attr("stroke", "#eee")
       .attr("stroke-width", 1);
 
+    // Axes
+    svg
+      .append("g")
+      .attr("transform", `translate(0,${height - margin.bottom})`)
+      .call(
+        d3
+          .axisBottom(xScale)
+          . ticks(d3.timeYear. every(1))
+          .tickFormat((d) => d3.timeFormat("%Y")(d as Date))
+      )
+      . selectAll("text")
+      .attr("font-size", "11px")
+      .attr("fill", "#666");
+
+    svg
+      .append("g")
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(d3.axisLeft(yScale). ticks(10))
+      .selectAll("text")
+      .attr("font-size", "11px")
+      .attr("fill", "#666");
+
     // Line generator
     const line = d3
       .line<LineDataPoint>()
-      . x((d) => xScale(d. date))
+      .x((d) => xScale(d. date))
       .y((d) => yScale(d.count))
       .curve(d3.curveMonotoneX);
 
     // Installation line (hidden initially)
     const installLine = svg
       .append("line")
-      .attr("stroke", "#333")
+      .attr("stroke", "#e94560")
       .attr("stroke-width", 2)
-      .attr("stroke-dasharray", "5,5")
+      .attr("stroke-dasharray", "6,4")
       .attr("y1", margin.top)
       .attr("y2", height - margin.bottom)
       .style("display", "none");
 
     const installLabel = svg
       .append("text")
-      .attr("font-size", "11px")
-      .attr("fill", "#333")
+      .attr("font-size", "12px")
+      . attr("fill", "#e94560")
+      .attr("font-weight", "600")
       .attr("text-anchor", "middle")
-      .style("display", "none");
+      . style("display", "none");
 
     // Draw lines
     svg
@@ -149,31 +152,30 @@ export default function LineChart({
       .attr("d", (d) => line(d.points))
       .attr("fill", "none")
       .attr("stroke", (d) => colorScale(d. cameraId))
-      .attr("stroke-width", (d) => (selectedCamera === d.cameraId ?  4 : 1.5))
+      .attr("stroke-width", (d) => (selectedCamera === d.cameraId ? 4 : 1.5))
       .attr("opacity", (d) => (selectedCamera === d.cameraId ? 1 : 0.6))
       .style("cursor", "pointer")
       .on("mouseover", function (event, d) {
         if (selectedCamera !== d.cameraId) {
-          d3.select(this).attr("stroke-width", 4). attr("opacity", 1);
+          d3.select(this). attr("stroke-width", 4). attr("opacity", 1);
         }
 
         tooltip
           .style("display", "block")
           .html(
             `
-            <b>Cámara:</b> ${d. cameraId}<br>
+            <b>Cámara:</b> ${d.cameraId}<br>
             <b>Vía:</b> ${d.principal || "Otros"}<br>
-            <b>Total:</b> ${d.totalAccidents} accidentes
+            <b>Total:</b> ${d.totalAccidents} accidentes<br>
+            <span style="color: #888; font-size: 11px;">Clic para seleccionar</span>
           `
           );
       })
       .on("mousemove", function (event) {
-        const [x, y] = d3.pointer(event, svgRef.current);
-        tooltip
-          .style("left", x + 15 + "px")
-          . style("top", y + 15 + "px");
+        const [x, y] = d3. pointer(event, svgRef. current);
+        tooltip.style("left", x + 15 + "px").style("top", y + 15 + "px");
       })
-      .on("mouseout", function (event, d) {
+      . on("mouseout", function (event, d) {
         if (selectedCamera !== d.cameraId) {
           d3. select(this).attr("stroke-width", 1.5).attr("opacity", 0.6);
         }
@@ -187,14 +189,12 @@ export default function LineChart({
     if (selectedCamera) {
       const selectedData = lineData.find((d) => d.cameraId === selectedCamera);
       if (selectedData?. installDate) {
-        const xPos = xScale(selectedData.installDate);
+        const xPos = xScale(selectedData. installDate);
         installLine.attr("x1", xPos).attr("x2", xPos). style("display", "block");
         installLabel
           .attr("x", xPos)
           .attr("y", margin.top - 10)
-          .text(
-            `Instalación: ${selectedData.installDate.toLocaleDateString("es-CO")}`
-          )
+          .text(`Instalación: ${selectedData.installDate. toLocaleDateString("es-CO")}`)
           .style("display", "block");
       }
     }
@@ -205,10 +205,10 @@ export default function LineChart({
       .attr("x", width / 2)
       .attr("y", 20)
       .attr("text-anchor", "middle")
-      . attr("font-size", "14px")
+      .attr("font-size", "16px")
       .attr("font-weight", "bold")
       .attr("fill", "#333")
-      .text(`Accidentes Mensuales por Cámara (${severityFilter})`);
+      .text(`Accidentes Mensuales (${severityFilter})`);
 
     // Axis labels
     svg
@@ -218,13 +218,13 @@ export default function LineChart({
       .attr("text-anchor", "middle")
       . attr("font-size", "12px")
       .attr("fill", "#666")
-      .text("Fecha");
+      .text("Año");
 
     svg
       .append("text")
       .attr("transform", "rotate(-90)")
       .attr("x", -height / 2)
-      .attr("y", 20)
+      .attr("y", 18)
       .attr("text-anchor", "middle")
       . attr("font-size", "12px")
       .attr("fill", "#666")
@@ -232,15 +232,16 @@ export default function LineChart({
   }, [lineData, allMonths, severityFilter, selectedCamera, onCameraSelect]);
 
   return (
-    <div className="relative">
+    <div className="relative bg-white rounded-xl shadow-lg overflow-hidden">
       <svg
         ref={svgRef}
-        viewBox="0 0 800 400"
-        className="w-full bg-white rounded-lg border border-gray-200"
+        viewBox="0 0 1000 450"
+        className="w-full"
+        style={{ backgroundColor: "white" }}
       />
       <div
         ref={tooltipRef}
-        className="absolute hidden bg-white/95 text-gray-800 p-2 rounded-md shadow-lg border border-gray-200 text-xs pointer-events-none z-50"
+        className="absolute hidden bg-white text-gray-800 p-3 rounded-lg shadow-xl border border-gray-200 text-sm pointer-events-none z-50"
         style={{ display: "none" }}
       />
     </div>
