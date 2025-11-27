@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useCameraData } from "@/hooks/useCameraData";
 import HeroSection from "./HeroSection";
@@ -9,7 +9,6 @@ import Sidebar from "./Sidebar";
 import Instructions from "./Instructions";
 import LineChart from "./LineChart";
 import { CameraStats } from "@/types";
-import { MapIcon, LineChart as LineChartIcon } from "lucide-react";
 
 // Dynamic import for Map to avoid SSR issues with Leaflet
 const Map = dynamic(() => import("./Map"), { ssr: false });
@@ -40,8 +39,6 @@ export default function Dashboard() {
   const [totalCameras, setTotalCameras] = useState(0);
   const [selectedCameraStats, setSelectedCameraStats] = useState<CameraStats | null>(null);
 
-  const contentRef = useRef<HTMLDivElement>(null);
-
   const handleStatsUpdate = useCallback(
     (
       stats: { reduction: number; increase: number; noChange: number },
@@ -55,15 +52,11 @@ export default function Dashboard() {
     []
   );
 
-  const scrollToContent = () => {
-    contentRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a1628] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-16 h-16 border-4 border-[#e94560]/30 border-t-[#e94560] rounded-full animate-spin mx-auto mb-4" />
           <div className="text-xl text-gray-400">Cargando datos...</div>
         </div>
       </div>
@@ -72,40 +65,35 @@ export default function Dashboard() {
 
   if (error || !segmentos) {
     return (
-      <div className="min-h-screen bg-[#0a1628] flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-xl text-red-400">{error || "Error loading data"}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0a1628]">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <HeroSection onScrollToContent={scrollToContent} />
+      <HeroSection />
 
       {/* Main Content */}
-      <div ref={contentRef} className="min-h-screen p-4 lg:p-6">
-        {/* Section Header */}
-        <div className="max-w-[1800px] mx-auto mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">
-            Herramientas de Análisis
-          </h2>
-          <p className="text-gray-400">
-            Explore los datos de accidentes antes y después de la instalación de cada cámara
-          </p>
-        </div>
+      <div className="px-4 lg:px-8 pb-12 max-w-[1800px] mx-auto">
+        {/* Instructions */}
+        <Instructions />
 
-        <div className="max-w-[1800px] mx-auto flex gap-4 lg:gap-6">
-          {/* Left Sidebar */}
-          <div className="w-64 flex-shrink-0 space-y-4">
-            <Filters
-              severityFilter={severityFilter}
-              principalFilter={principalFilter}
-              principalOptions={principalOptions}
-              onSeverityChange={setSeverityFilter}
-              onPrincipalChange={setPrincipalFilter}
-            />
-            <Instructions />
+        {/* Filters */}
+        <Filters
+          severityFilter={severityFilter}
+          principalFilter={principalFilter}
+          principalOptions={principalOptions}
+          onSeverityChange={setSeverityFilter}
+          onPrincipalChange={setPrincipalFilter}
+        />
+
+        {/* Map and Sidebar Row */}
+        <div className="flex gap-6 mb-6">
+          {/* Left: Sidebar (40%) */}
+          <div className="w-[40%]">
             <Sidebar
               selectedCamera={selectedCamera}
               cameraInfo={cameraInfo}
@@ -117,18 +105,10 @@ export default function Dashboard() {
             />
           </div>
 
-          {/* Main Content Area */}
-          <div className="flex-1 space-y-4">
-            {/* Map */}
-            <div className="bg-[#132238]/50 backdrop-blur-sm rounded-xl border border-cyan-500/20 overflow-hidden">
-              <div className="px-4 py-3 border-b border-cyan-500/20 flex items-center gap-2">
-                <MapIcon className="w-5 h-5 text-cyan-400" />
-                <h3 className="font-semibold text-white">Mapa de Cámaras</h3>
-                <span className="text-xs text-gray-400 ml-auto">
-                  Haga clic en un segmento para ver detalles
-                </span>
-              </div>
-              <div className="h-[400px]">
+          {/* Right: Map (60%) */}
+          <div className="w-[60%]">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 overflow-hidden h-full">
+              <div className="h-[500px]">
                 <Map
                   segmentos={segmentos}
                   accidentesProcessed={accidentesProcessed}
@@ -142,33 +122,30 @@ export default function Dashboard() {
                 />
               </div>
             </div>
-
-            {/* Line Chart */}
-            <div className="bg-[#132238]/50 backdrop-blur-sm rounded-xl border border-cyan-500/20 overflow-hidden">
-              <div className="px-4 py-3 border-b border-cyan-500/20 flex items-center gap-2">
-                <LineChartIcon className="w-5 h-5 text-amber-400" />
-                <h3 className="font-semibold text-white">Accidentes por Mes</h3>
-                <span className="text-xs text-gray-400 ml-auto">
-                  Haga clic en una línea para ver la fecha de instalación
-                </span>
-              </div>
-              <div className="p-4">
-                <LineChart
-                  accidentesProcessed={accidentesProcessed}
-                  cameraInfo={cameraInfo}
-                  allMonths={allMonths}
-                  severityFilter={severityFilter}
-                  principalFilter={principalFilter}
-                  selectedCamera={selectedCamera}
-                  onCameraSelect={handleCameraSelect}
-                />
-              </div>
-            </div>
           </div>
         </div>
 
+        {/* Line Chart */}
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-3">
+            Accidentes por Mes
+            <span className="text-sm font-normal text-gray-400 ml-3">
+              Haga clic en una línea para ver la fecha de instalación de la cámara
+            </span>
+          </h3>
+          <LineChart
+            accidentesProcessed={accidentesProcessed}
+            cameraInfo={cameraInfo}
+            allMonths={allMonths}
+            severityFilter={severityFilter}
+            principalFilter={principalFilter}
+            selectedCamera={selectedCamera}
+            onCameraSelect={handleCameraSelect}
+          />
+        </div>
+
         {/* Footer */}
-        <div className="max-w-[1800px] mx-auto mt-8 pt-6 border-t border-gray-800">
+        <div className="mt-12 pt-6 border-t border-white/10">
           <p className="text-center text-sm text-gray-500">
             Datos de accidentes de tránsito en Bogotá (2018-2022) • 
             Análisis de efectividad de cámaras salvavidas
